@@ -7,8 +7,15 @@ export default function Dashboard() {
   const [days, setDays] = useState(1);
   const [historicalStats, setHistoricalStats] = useState(null);
   const [chartData, setChartData] = useState([]);
+  
+  // State untuk mendeteksi layar mobile (otomatis update saat layar di-resize)
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
+    // Listener untuk ukuran layar
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+
     const fetchLatestData = async () => {
       const { data } = await supabase.from('sensor_data').select('*').order('created_at', { ascending: false }).limit(1).single();
       if (data) setSensorData({ temperature: data.temperature, humidity: data.humidity, pressure: data.pressure });
@@ -30,15 +37,21 @@ export default function Dashboard() {
     fetchLatestData();
     fetchChartData();
 
+    // Listener Real-time
     const subscription = supabase.channel('sensor_listener').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'sensor_data' }, (payload) => {
         setSensorData({ temperature: payload.new.temperature, humidity: payload.new.humidity, pressure: payload.new.pressure });
     }).subscribe();
 
-    return () => supabase.removeChannel(subscription);
+    // Cleanup saat komponen dibongkar
+    return () => {
+      supabase.removeChannel(subscription);
+      window.removeEventListener('resize', handleResize);
+    };
   }, [days]);
 
   return (
     <>
+      {/* KARTU METRIK REAL-TIME */}
       <div className="row mb-4">
         <div className="col-xl-4 col-md-6 mb-4 mb-xl-0">
           <div className="card shadow-sm h-100 py-3 rounded-lg border-0 border-bottom-warning" style={{ borderBottomWidth: '4px' }}>
@@ -66,28 +79,70 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="d-flex justify-content-between align-items-center mb-3 mt-5">
+      {/* KONTROL PERIODE HISTORIS */}
+      <div className="d-flex justify-content-between align-items-center mb-3 mt-4 mt-md-5">
         <h1 className="h5 mb-0 text-gray-800 font-weight-bold">Analisis Historis</h1>
-        <div className="btn-group shadow-sm">
+        
+        {/* Dropdown Khusus Mobile (Disembunyikan di Desktop) */}
+        <div className="d-block d-md-none">
+          <select 
+            className="form-select form-select-sm shadow-sm font-weight-bold text-primary border-0" 
+            style={{ borderRadius: '20px', padding: '0.4rem 1rem', backgroundColor: '#fff' }}
+            value={days} 
+            onChange={(e) => setDays(Number(e.target.value))}
+          >
+            <option value={1}>24 Jam Terakhir</option>
+            <option value={7}>7 Hari Terakhir</option>
+            <option value={30}>30 Hari Terakhir</option>
+          </select>
+        </div>
+
+        {/* Button Group Khusus Desktop (Disembunyikan di Mobile) */}
+        <div className="d-none d-md-block btn-group shadow-sm">
           <button onClick={() => setDays(1)} className={`btn btn-sm ${days === 1 ? 'btn-primary' : 'btn-white bg-white text-dark'}`}>24 Jam</button>
           <button onClick={() => setDays(7)} className={`btn btn-sm ${days === 7 ? 'btn-primary' : 'btn-white bg-white text-dark'}`}>7 Hari</button>
           <button onClick={() => setDays(30)} className={`btn btn-sm ${days === 30 ? 'btn-primary' : 'btn-white bg-white text-dark'}`}>30 Hari</button>
         </div>
       </div>
 
+      {/* STATISTIK HISTORIS DENGAN SEKAT CSS (stat-divider) */}
       <div className="card shadow-sm rounded-lg border-0 mb-4 p-4 bg-white">
         <div className="row text-center">
-          <div className="col-md-4 border-right"><h6 className="text-warning font-weight-bold mb-3">Statistik Suhu (°C)</h6><div className="d-flex justify-content-around"><div><small className="text-muted d-block">Max</small><b>{historicalStats?.temp_max || '--'}</b></div><div><small className="text-muted d-block">Avg</small><b>{historicalStats?.temp_avg || '--'}</b></div><div><small className="text-muted d-block">Min</small><b>{historicalStats?.temp_min || '--'}</b></div></div></div>
-          <div className="col-md-4 border-right"><h6 className="text-primary font-weight-bold mb-3">Statistik Kelembapan (%)</h6><div className="d-flex justify-content-around"><div><small className="text-muted d-block">Max</small><b>{historicalStats?.hum_max || '--'}</b></div><div><small className="text-muted d-block">Avg</small><b>{historicalStats?.hum_avg || '--'}</b></div><div><small className="text-muted d-block">Min</small><b>{historicalStats?.hum_min || '--'}</b></div></div></div>
-          <div className="col-md-4"><h6 className="text-success font-weight-bold mb-3">Statistik Tekanan (hPa)</h6><div className="d-flex justify-content-around"><div><small className="text-muted d-block">Max</small><b>{historicalStats?.pres_max || '--'}</b></div><div><small className="text-muted d-block">Avg</small><b>{historicalStats?.pres_avg || '--'}</b></div><div><small className="text-muted d-block">Min</small><b>{historicalStats?.pres_min || '--'}</b></div></div></div>
+          <div className="col-md-4 stat-divider">
+            <h6 className="text-warning font-weight-bold mb-3">Statistik Suhu (°C)</h6>
+            <div className="d-flex justify-content-around">
+              <div><small className="text-muted d-block">Max</small><b>{historicalStats?.temp_max || '--'}</b></div>
+              <div><small className="text-muted d-block">Avg</small><b>{historicalStats?.temp_avg || '--'}</b></div>
+              <div><small className="text-muted d-block">Min</small><b>{historicalStats?.temp_min || '--'}</b></div>
+            </div>
+          </div>
+          <div className="col-md-4 stat-divider">
+            <h6 className="text-primary font-weight-bold mb-3">Statistik Kelembapan (%)</h6>
+            <div className="d-flex justify-content-around">
+              <div><small className="text-muted d-block">Max</small><b>{historicalStats?.hum_max || '--'}</b></div>
+              <div><small className="text-muted d-block">Avg</small><b>{historicalStats?.hum_avg || '--'}</b></div>
+              <div><small className="text-muted d-block">Min</small><b>{historicalStats?.hum_min || '--'}</b></div>
+            </div>
+          </div>
+          <div className="col-md-4 stat-divider">
+            <h6 className="text-success font-weight-bold mb-3">Statistik Tekanan (hPa)</h6>
+            <div className="d-flex justify-content-around">
+              <div><small className="text-muted d-block">Max</small><b>{historicalStats?.pres_max || '--'}</b></div>
+              <div><small className="text-muted d-block">Avg</small><b>{historicalStats?.pres_avg || '--'}</b></div>
+              <div><small className="text-muted d-block">Min</small><b>{historicalStats?.pres_min || '--'}</b></div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="card shadow-sm rounded-lg border-0 p-4 bg-white">
+      {/* GRAFIK RECHARTS */}
+      <div className="card shadow-sm rounded-lg border-0 p-3 p-md-4 bg-white">
         <h6 className="text-gray-800 font-weight-bold mb-4">Grafik Tren Suhu & Kelembapan</h6>
-        <div style={{ width: '100%', height: '350px' }}>
+        {/* Tinggi disesuaikan otomatis jika layar mobile (280px) atau desktop (350px) */}
+        <div style={{ width: '100%', height: isMobile ? '280px' : '350px' }}>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+            {/* Margin diatur agar sumbu Y kiri tidak terpotong di HP */}
+            <LineChart data={chartData} margin={{ top: 5, right: 0, left: isMobile ? -25 : 0, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.3} vertical={false} />
               <XAxis dataKey="timeLabel" tick={{ fontSize: 12, fill: '#888' }} tickMargin={10} />
               <YAxis yAxisId="left" tick={{ fontSize: 12, fill: '#888' }} domain={['auto', 'auto']} />

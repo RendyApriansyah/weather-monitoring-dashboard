@@ -1,0 +1,85 @@
+/* =========================================
+   SISTEM SIDEBAR RESPONSIVE (MOBILE & PC)
+   ========================================= */
+
+.sidebar {
+  transition: all 0.3s ease-in-out !important;
+}
+
+/* --- MOBILE (< 768px) --- */
+@media (max-width: 768px) {
+  .sidebar-closed {
+    display: none !important; /* Hilang sepenuhnya saat ditutup di HP */
+  }
+  
+  .sidebar-open {
+    display: flex !important;
+    position: fixed !important;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 9999;
+    width: 100px !important; /* Buka lebar agar teks terbaca jelas */
+    box-shadow: 4px 0 10px rgba(0,0,0,0.5);
+  }
+
+  /* Teks topbar */
+  .topbar-title {
+    font-size: 1rem !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+  }
+  .topbar-date {
+    font-size: 0.75rem !important;
+  }
+
+  /* Sekat Statistik */
+  .stat-divider {
+    border-right: none !important;
+    border-bottom: 1px solid #eaecf4;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+  .stat-divider:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+}
+
+/* --- PC / DESKTOP (>= 768px) --- */
+@media (min-width: 768px) {
+  /* Mode Mini Sidebar */
+  .sidebar-closed {
+    width: 80px !important;
+  }
+  
+  /* Sembunyikan teks di mode mini */
+  .sidebar-closed span, 
+  .sidebar-closed .sidebar-brand-text {
+    display: none !important;
+  }
+  
+  /* Posisikan ikon persis di tengah saat mode mini */
+  .sidebar-closed .nav-link {
+    justify-content: center !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* Agar ikon hamburger juga ke tengah */
+  .sidebar-closed .sidebar-brand-icon {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Sekat Statistik */
+  .stat-divider {
+    border-right: 1px solid #eaecf4;
+  }
+  .stat-divider:last-child {
+    border-right: none;
+  }
+}
