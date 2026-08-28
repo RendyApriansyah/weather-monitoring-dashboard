@@ -79,3 +79,24 @@
     border-right: none;
   }
 }
+
+.text-temperature {
+  color: #d39e00 !important; /* Kuning keemasan/mustard yang aman dibaca di layar putih */
+}
+.border-bottom-temperature {
+  border-bottom: 4px solid #d39e00 !important;
+}
+
+/* 2. Hierarki Visual Tabel (Sticky Header & Scroll) */
+.table-scrollable-container {
+  max-height: 500px; /* Batas tinggi tabel sebelum di-scroll */
+  overflow-y: auto;
+}
+
+.table-sticky-header th {
+  position: sticky;
+  top: 0;
+  background-color: #f8f9fc !important; /* Menyamai warna thead-light */
+  z-index: 10;
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+}

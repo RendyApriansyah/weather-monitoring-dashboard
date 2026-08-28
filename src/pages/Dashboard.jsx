@@ -54,9 +54,9 @@ export default function Dashboard() {
       {/* KARTU METRIK REAL-TIME */}
       <div className="row mb-4">
         <div className="col-xl-4 col-md-6 mb-4 mb-xl-0">
-          <div className="card shadow-sm h-100 py-3 rounded-lg border-0 border-bottom-warning" style={{ borderBottomWidth: '4px' }}>
+          <div className="card shadow-sm h-100 py-3 rounded-lg border-0 border-bottom-temperature" style={{ borderBottomWidth: '4px' }}>
             <div className="card-body d-flex align-items-center justify-content-between">
-              <div><div className="text-xs font-weight-bold text-warning text-uppercase mb-2">Suhu Saat Ini</div><div className="h3 mb-0 font-weight-bold text-gray-800">{sensorData.temperature} °C</div></div>
+              <div><div className="text-xs font-weight-bold text-temperature text-uppercase mb-2">Suhu Saat Ini</div><div className="h3 mb-0 font-weight-bold text-gray-800">{sensorData.temperature} °C</div></div>
               <i className="fas fa-thermometer-half fa-3x text-gray-300"></i>
             </div>
           </div>
@@ -109,7 +109,7 @@ export default function Dashboard() {
       <div className="card shadow-sm rounded-lg border-0 mb-4 p-4 bg-white">
         <div className="row text-center">
           <div className="col-md-4 stat-divider">
-            <h6 className="text-warning font-weight-bold mb-3">Statistik Suhu (°C)</h6>
+            <h6 className="text-temperature font-weight-bold mb-3">Statistik Suhu (°C)</h6>
             <div className="d-flex justify-content-around">
               <div><small className="text-muted d-block">Max</small><b>{historicalStats?.temp_max || '--'}</b></div>
               <div><small className="text-muted d-block">Avg</small><b>{historicalStats?.temp_avg || '--'}</b></div>
@@ -144,7 +144,7 @@ export default function Dashboard() {
             {/* Margin diatur agar sumbu Y kiri tidak terpotong di HP */}
             <LineChart data={chartData} margin={{ top: 5, right: 0, left: isMobile ? -25 : 0, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.3} vertical={false} />
-              <XAxis dataKey="timeLabel" tick={{ fontSize: 12, fill: '#888' }} tickMargin={10} />
+              <XAxis dataKey="timeLabel" tick={{ fontSize: 12, fill: '#888' }} tickMargin={10} minTickGap={40} />
               <YAxis yAxisId="left" tick={{ fontSize: 12, fill: '#888' }} domain={['auto', 'auto']} />
               <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12, fill: '#888' }} domain={['auto', 'auto']} />
               <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }} />
