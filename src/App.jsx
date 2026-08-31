@@ -7,30 +7,29 @@ import './App.css';
 
 function App() {
   const [activePage, setActivePage] = useState('dashboard');
-  // State baru untuk mendeteksi apakah sidebar dibuka (khusus mobile)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
+  // STATE BARU: Menyimpan stasiun yang sedang aktif (Default: 1)
+  const [activeStation, setActiveStation] = useState(1);
 
   return (
     <div id="wrapper" className="d-flex vh-100 w-100 overflow-hidden bg-light position-relative">
-      
-      {/* Komponen Navigasi Kiri */}
-      <Sidebar 
-        activePage={activePage} 
-        setActivePage={setActivePage} 
-        isSidebarOpen={isSidebarOpen} 
-        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}/>
+      <Sidebar activePage={activePage} setActivePage={setActivePage} isSidebarOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
       <div id="content-wrapper" className="d-flex flex-column flex-fill overflow-auto w-100">
         <div id="content">
           
-          {/* Topbar diberikan fungsi untuk menekan tombol hamburger */}
+          {/* Kirim state activeStation ke Topbar agar bisa diubah melalui dropdown */}
           <Topbar 
             title={activePage === 'dashboard' ? 'Dashboard Pengukuran Cuaca' : 'Data Historis Pengukuran Cuaca'} 
             toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+            activeStation={activeStation}
+            setActiveStation={setActiveStation}
           />
 
           <div className="container-fluid px-4 pb-4">
-            {activePage === 'dashboard' ? <Dashboard /> : <History />}
+            {/* Kirim activeStation ke halaman agar tabel & grafik menyesuaikan */}
+            {activePage === 'dashboard' ? <Dashboard activeStation={activeStation} /> : <History activeStation={activeStation} />}
           </div>
           
         </div>

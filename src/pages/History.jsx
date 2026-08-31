@@ -1,19 +1,18 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 
-export default function History() {
+export default function History({ activeStation }) {
   const [tableData, setTableData] = useState([]);
   const [isLoadingTable, setIsLoadingTable] = useState(false);
-  
-  // State Filter Tanggal
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [isDownloading, setIsDownloading] = useState(false);
-
-  // State Paginasi Baru
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const ROWS_PER_PAGE = 25;
+
+  // Nama tabel bergantung pada stasiun yang aktif
+  const tableName = activeStation === 1 ? 'sensor_data' : 'station_2_data';
 
   const formatWaktu = (isoString) => {
     if (!isoString) return '--';
@@ -26,34 +25,27 @@ export default function History() {
     return `${day}/${month}/${year} ${hours}:${minutes}`;
   };
 
-  // Effect Paginasi: Hanya mengambil 25 baris dari Supabase sesuai halaman aktif
   useEffect(() => {
     const fetchTableData = async () => {
       setIsLoadingTable(true);
-      
-      // Kalkulasi indeks data (misal Halaman 1 = 0-24, Halaman 2 = 25-49)
       const from = (currentPage - 1) * ROWS_PER_PAGE;
       const to = from + ROWS_PER_PAGE - 1;
 
-      // 1. Ambil Total Baris untuk menghitung jumlah halaman
-      const { count } = await supabase
-        .from('sensor_data')
-        .select('*', { count: 'exact', head: true });
-
+      const { count } = await supabase.from(tableName).select('*', { count: 'exact', head: true });
       if (count) setTotalPages(Math.ceil(count / ROWS_PER_PAGE));
 
-      // 2. Ambil sebagian data sesuai rentang (range)
-      const { data } = await supabase
-        .from('sensor_data')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .range(from, to);
-        
+      const { data } = await supabase.from(tableName).select('*').order('created_at', { ascending: false }).range(from, to);
       if (data) setTableData(data);
       setIsLoadingTable(false);
     };
+    
     fetchTableData();
-  }, [currentPage]); // Akan berjalan otomatis setiap kali currentPage berubah
+  }, [currentPage, activeStation]); // Akan fetch ulang jika pindah halaman ATAU pindah stasiun
+
+  // Reset pagination ke halaman 1 setiap kali stasiun diubah
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeStation]);
 
   const handleDownloadFilteredCSV = async () => {
     setIsDownloading(true);
@@ -63,12 +55,7 @@ export default function History() {
       const start = new Date(`${startDate}T00:00:00`).toISOString();
       const end = new Date(`${endDate}T23:59:59`).toISOString();
 
-      const { data, error } = await supabase
-        .from('sensor_data')
-        .select('*')
-        .gte('created_at', start)
-        .lte('created_at', end)
-        .order('created_at', { ascending: true });
+      const { data, error } = await supabase.from(tableName).select('*').gte('created_at', start).lte('created_at', end).order('created_at', { ascending: true });
 
       if (error || !data || data.length === 0) {
         alert("Gagal atau tidak ada data pada rentang tersebut.");
@@ -78,16 +65,19 @@ export default function History() {
       dataToExport = data;
     }
 
-    let csvContent = "No,Suhu (°C),Kelembapan (%),Tekanan Udara (hPa),Waktu Pencatatan\n";
+    // Header CSV dinamis
+    const param3Header = activeStation === 1 ? 'Tekanan Udara (hPa)' : 'Intensitas Cahaya (Lux)';
+    let csvContent = `No,Suhu (°C),Kelembapan (%),${param3Header},Waktu Pencatatan\n`;
+    
     dataToExport.forEach((row, index) => {
-      csvContent += `${index + 1},${row.temperature},${row.humidity},${row.pressure},"${formatWaktu(row.created_at)}"\n`;
+      const param3Value = activeStation === 1 ? row.pressure : row.light_intensity;
+      csvContent += `${index + 1},${row.temperature},${row.humidity},${param3Value},"${formatWaktu(row.created_at)}"\n`;
     });
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.setAttribute("href", url);
-    const fileName = (startDate && endDate) ? `Laporan_Cuaca_${startDate}_hingga_${endDate}.csv` : `Data_Cuaca_Terbaru.csv`;
+    const fileName = (startDate && endDate) ? `Laporan_Stasiun${activeStation}_${startDate}_${endDate}.csv` : `Data_Stasiun${activeStation}_Terbaru.csv`;
     link.setAttribute("download", fileName);
     document.body.appendChild(link);
     link.click();
@@ -99,13 +89,12 @@ export default function History() {
   return (
     <>
       <p className="mb-4 text-gray-600">
-        Menampilkan riwayat data operasional. Gunakan fitur paginasi di bawah tabel untuk navigasi, atau filter rentang tanggal untuk mengunduh laporan utuh.
+        Menampilkan riwayat data operasional <b>Stasiun {activeStation}</b>. Gunakan fitur paginasi di bawah tabel untuk navigasi, atau filter rentang tanggal untuk mengunduh laporan utuh.
       </p>
       
       <div className="card shadow-sm border-0 mb-4">
         <div className="card-header py-3 bg-white d-flex flex-column flex-md-row justify-content-between align-items-md-center">
           <h6 className="m-0 font-weight-bold text-primary mb-3 mb-md-0">Tabel Data Pengukuran</h6>
-          
           <div className="d-flex flex-column flex-md-row align-items-md-center">
              <div className="d-flex align-items-center mb-2 mb-md-0 mr-md-3">
                <small className="text-muted mr-2 d-none d-md-inline">Mulai:</small>
@@ -121,7 +110,7 @@ export default function History() {
           </div>
         </div>
         
-        <div className="card-body p-0"> {/* Padding dihilangkan agar tabel membaur bersih dengan card */}
+        <div className="card-body p-0">
           <div className="table-responsive table-scrollable-container m-0">
             <table className="table table-bordered table-hover table-striped table-sticky-header mb-0" width="100%" cellSpacing="0">
               <thead className="thead-light">
@@ -129,23 +118,24 @@ export default function History() {
                   <th>No</th>
                   <th>Suhu (°C)</th>
                   <th>Kelembapan (%)</th>
-                  <th>Tekanan Udara (hPa)</th>
+                  {/* HEADER TABEL DINAMIS */}
+                  <th>{activeStation === 1 ? 'Tekanan Udara (hPa)' : 'Intensitas Cahaya (Lux)'}</th>
                   <th>Waktu Pencatatan</th>
                 </tr>
               </thead>
               <tbody>
                 {isLoadingTable ? (
-                  <tr><td colSpan="5" className="text-center py-5">Memuat data...</td></tr>
+                  <tr><td colSpan="5" className="text-center py-5">Memuat data Stasiun {activeStation}...</td></tr>
                 ) : tableData.length === 0 ? (
-                  <tr><td colSpan="5" className="text-center py-5">Belum ada data tersedia</td></tr>
+                  <tr><td colSpan="5" className="text-center py-5">Belum ada data tersedia untuk Stasiun {activeStation}</td></tr>
                 ) : (
                   tableData.map((row, index) => (
                     <tr key={row.id}>
-                      {/* Kalkulasi nomor urut agar berlanjut di halaman berikutnya */}
                       <td>{(currentPage - 1) * ROWS_PER_PAGE + index + 1}</td>
                       <td>{row.temperature}</td>
                       <td>{row.humidity}</td>
-                      <td>{row.pressure}</td>
+                      {/* BARIS DATA DINAMIS */}
+                      <td>{activeStation === 1 ? row.pressure : row.light_intensity}</td>
                       <td>{formatWaktu(row.created_at)}</td>
                     </tr>
                   ))
@@ -155,29 +145,19 @@ export default function History() {
           </div>
         </div>
 
-        {/* Kontrol Navigasi Paginasi */}
         <div className="card-footer bg-white d-flex justify-content-between align-items-center py-3">
           <small className="text-muted font-weight-bold">
             Halaman {currentPage} dari {totalPages}
           </small>
           <div>
-            <button 
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
-              disabled={currentPage === 1 || isLoadingTable} 
-              className="btn btn-sm btn-outline-primary mr-2 font-weight-bold"
-            >
+            <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1 || isLoadingTable} className="btn btn-sm btn-outline-primary mr-2 font-weight-bold">
               <i className="fas fa-chevron-left mr-1"></i> Sebelumnya
             </button>
-            <button 
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 
-              disabled={currentPage === totalPages || isLoadingTable} 
-              className="btn btn-sm btn-outline-primary font-weight-bold"
-            >
+            <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages || isLoadingTable} className="btn btn-sm btn-outline-primary font-weight-bold">
               Selanjutnya <i className="fas fa-chevron-right ml-1"></i>
             </button>
           </div>
         </div>
-
       </div>
     </>
   );
