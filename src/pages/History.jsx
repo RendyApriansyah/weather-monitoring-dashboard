@@ -48,44 +48,86 @@ export default function History({ activeStation }) {
   }, [activeStation]);
 
   const handleDownloadFilteredCSV = async () => {
-    setIsDownloading(true);
-    let dataToExport = tableData; 
+    try {
+      setIsDownloading(true);
+      let dataToExport = []; 
 
-    if (startDate && endDate) {
-      const start = new Date(`${startDate}T00:00:00`).toISOString();
-      const end = new Date(`${endDate}T23:59:59`).toISOString();
+      // 1. Logika Pengambilan Data dari Supabase
+      if (startDate && endDate) {
+        const start = new Date(`${startDate}T00:00:00`).toISOString();
+        const end = new Date(`${endDate}T23:59:59`).toISOString();
 
-      const { data, error } = await supabase.from(tableName).select('*').gte('created_at', start).lte('created_at', end).order('created_at', { ascending: true });
+        const { data, error } = await supabase
+          .from(tableName)
+          .select('*')
+          .gte('created_at', start)
+          .lte('created_at', end)
+          .order('created_at', { ascending: true });
 
-      if (error || !data || data.length === 0) {
-        alert("Gagal atau tidak ada data pada rentang tersebut.");
-        setIsDownloading(false);
-        return;
+        if (error) throw error;
+        
+        if (!data || data.length === 0) {
+          alert("Tidak ada data terekam pada rentang tanggal tersebut.");
+          setIsDownloading(false);
+          return;
+        }
+        dataToExport = data;
+      } else {
+        // Jika tanggal kosong, jangan ekspor 25 baris di tabel, 
+        // melainkan ambil 1000 data terakhir langsung dari database
+        const { data, error } = await supabase
+          .from(tableName)
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(1000);
+          
+        if (error) throw error;
+        if (!data || data.length === 0) {
+          alert(`Belum ada data terekam untuk Stasiun ${activeStation}.`);
+          setIsDownloading(false);
+          return;
+        }
+        dataToExport = data;
       }
-      dataToExport = data;
+
+      // 2. Perakitan File CSV
+      const param3Header = activeStation === 1 ? 'Tekanan Udara (hPa)' : 'Intensitas Cahaya (Lux)';
+      let csvContent = `No,Suhu (°C),Kelembapan (%),${param3Header},Waktu Pencatatan\n`;
+      
+      dataToExport.forEach((row, index) => {
+        const param3Value = activeStation === 1 ? row.pressure : row.light_intensity;
+        
+        // Membersihkan data null jika sensor sempat gagal mengirim
+        const temp = row.temperature ?? '';
+        const hum = row.humidity ?? '';
+        const p3 = param3Value ?? '';
+        
+        csvContent += `${index + 1},${temp},${hum},${p3},"${formatWaktu(row.created_at)}"\n`;
+      });
+
+      // 3. Proses Pengunduhan (Bug Teratasi)
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      
+      const fileName = (startDate && endDate) 
+        ? `Laporan_Stasiun${activeStation}_${startDate}_${endDate}.csv` 
+        : `Data_Stasiun${activeStation}_Terbaru.csv`;
+        
+      link.setAttribute("href", url); // <-- Ini adalah baris penting yang terlewat sebelumnya
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url); // Membersihkan memori browser setelah file terunduh
+
+    } catch (error) {
+      console.error("Gagal mengekspor CSV:", error);
+      alert("Terjadi kesalahan jaringan saat mengunduh laporan.");
+    } finally {
+      setIsDownloading(false);
     }
-
-    // Header CSV dinamis
-    const param3Header = activeStation === 1 ? 'Tekanan Udara (hPa)' : 'Intensitas Cahaya (Lux)';
-    let csvContent = `No,Suhu (°C),Kelembapan (%),${param3Header},Waktu Pencatatan\n`;
-    
-    dataToExport.forEach((row, index) => {
-      const param3Value = activeStation === 1 ? row.pressure : row.light_intensity;
-      csvContent += `${index + 1},${row.temperature},${row.humidity},${param3Value},"${formatWaktu(row.created_at)}"\n`;
-    });
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    const fileName = (startDate && endDate) ? `Laporan_Stasiun${activeStation}_${startDate}_${endDate}.csv` : `Data_Stasiun${activeStation}_Terbaru.csv`;
-    link.setAttribute("download", fileName);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    setIsDownloading(false);
   };
-
   return (
     <>
       <p className="mb-4 text-gray-600">
