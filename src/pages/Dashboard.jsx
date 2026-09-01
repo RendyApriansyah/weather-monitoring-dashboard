@@ -154,21 +154,75 @@ export default function Dashboard({ activeStation }) {
         </div>
       </div>
 
-      <div className="card shadow-sm rounded-lg border-0 p-3 p-md-4 bg-white">
-        <h6 className="text-gray-800 font-weight-bold mb-4">Grafik Tren Suhu & Kelembapan</h6>
-        <div style={{ width: '100%', height: isMobile ? '280px' : '350px' }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ top: 5, right: 0, left: isMobile ? -25 : 0, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" opacity={0.3} vertical={false} />
-              <XAxis dataKey="timeLabel" tick={{ fontSize: 12, fill: '#888' }} tickMargin={10} minTickGap={40} />
-              <YAxis yAxisId="left" tick={{ fontSize: 12, fill: '#888' }} domain={['auto', 'auto']} />
-              <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12, fill: '#888' }} domain={['auto', 'auto']} />
-              <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }} />
-              <Line yAxisId="left" type="monotone" name="Suhu (°C)" dataKey="temperature" stroke="#d39e00" strokeWidth={3} dot={false} activeDot={{ r: 8 }} />
-              <Line yAxisId="right" type="monotone" name="Kelembapan (%)" dataKey="humidity" stroke="#4e73df" strokeWidth={3} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
+      {/* =========================================
+          AREA GRAFIK TERPISAH (SERAGAM Penuh)
+          ========================================= */}
+      <div className="row">
+        
+        {/* 1. GRAFIK SUHU */}
+        <div className="col-12 mb-4">
+          <div className="card shadow-sm rounded-lg border-0 p-3 p-md-4 bg-white h-100">
+            <h6 className="text-temperature font-weight-bold mb-4">Grafik Tren Suhu (°C)</h6>
+            <div style={{ width: '100%', height: '280px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData} margin={{ top: 5, right: 10, left: isMobile ? -25 : -10, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.3} vertical={false} />
+                  <XAxis dataKey="timeLabel" tick={{ fontSize: 12, fill: '#888' }} tickMargin={10} minTickGap={40} />
+                  <YAxis tick={{ fontSize: 12, fill: '#888' }} domain={['auto', 'auto']} />
+                  <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }} />
+                  <Line type="monotone" name="Suhu (°C)" dataKey="temperature" stroke="#d39e00" strokeWidth={3} dot={false} activeDot={{ r: 8 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </div>
+
+        {/* 2. GRAFIK KELEMBAPAN */}
+        <div className="col-12 mb-4">
+          <div className="card shadow-sm rounded-lg border-0 p-3 p-md-4 bg-white h-100">
+            <h6 className="text-primary font-weight-bold mb-4">Grafik Tren Kelembapan (%)</h6>
+            <div style={{ width: '100%', height: '280px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData} margin={{ top: 5, right: 10, left: isMobile ? -25 : -10, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.3} vertical={false} />
+                  <XAxis dataKey="timeLabel" tick={{ fontSize: 12, fill: '#888' }} tickMargin={10} minTickGap={40} />
+                  <YAxis tick={{ fontSize: 12, fill: '#888' }} domain={['auto', 'auto']} />
+                  <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }} />
+                  <Line type="monotone" name="Kelembapan (%)" dataKey="humidity" stroke="#4e73df" strokeWidth={3} dot={false} activeDot={{ r: 8 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+
+        {/* 3. GRAFIK DINAMIS (TEKANAN UDARA / CAHAYA) */}
+        <div className="col-12 mb-4">
+          <div className="card shadow-sm rounded-lg border-0 p-3 p-md-4 bg-white h-100">
+            <h6 className={`${activeStation === 1 ? 'text-success' : 'text-info'} font-weight-bold mb-4`}>
+              Grafik Tren {activeStation === 1 ? 'Tekanan Udara (hPa)' : 'Intensitas Cahaya (Lux)'}
+            </h6>
+            <div style={{ width: '100%', height: '280px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData} margin={{ top: 5, right: 10, left: isMobile ? -25 : -10, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.3} vertical={false} />
+                  <XAxis dataKey="timeLabel" tick={{ fontSize: 12, fill: '#888' }} tickMargin={10} minTickGap={40} />
+                  <YAxis tick={{ fontSize: 12, fill: '#888' }} domain={['auto', 'auto']} />
+                  <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }} />
+                  <Line 
+                    type="monotone" 
+                    name={activeStation === 1 ? 'Tekanan (hPa)' : 'Cahaya (Lux)'} 
+                    dataKey="parameter3_value" 
+                    stroke={activeStation === 1 ? '#1cc88a' : '#36b9cc'} 
+                    strokeWidth={3} 
+                    dot={false} 
+                    activeDot={{ r: 8 }} 
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+
       </div>
     </>
   );
