@@ -370,7 +370,6 @@
   }
   .floating-header {
     padding: 8px 15px;
-    border-radius: 12px; /* make it more square like image on mobile */
   }
   .brand-logo {
     height: 24px;
