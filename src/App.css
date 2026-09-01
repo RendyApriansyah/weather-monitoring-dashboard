@@ -100,3 +100,303 @@
   z-index: 10;
   box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
 }
+
+.floating-header-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%); /* Menengahkan elemen fixed */
+  z-index: 1030;
+  width: calc(100% - 30px);
+  max-width: 1400px;
+}
+
+.floating-header {
+  background-color: #284aa1;
+  border-radius: 50px;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid #333333;
+}
+
+.nav-links button {
+  background: transparent;
+  border: none;
+  color: #888888;
+  font-weight: 600;
+  font-size: 14px;
+  margin-right: 25px;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.nav-links button:hover {
+  color: #cccccc;
+}
+
+.nav-links button.active {
+  color: #ffffff;
+}
+
+.time-display {
+  background-color:  #ffffff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a1a;
+  border: 1px solid #2a2a2a;
+}
+
+/* =========================================
+   PURE CSS DROPDOWN ARROW
+   ========================================= */
+
+/* 1. Wadah untuk mengatur posisi panah */
+.select-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* 2. Menggambar panah menggunakan trik manipulasi border */
+.select-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 15px; /* Atur posisi panah dari sisi kanan di sini */
+  transform: translateY(-25%); /* Menyeimbangkan posisi vertikal */
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #333333; /* Ganti #333333 untuk mengubah WARNA PANAH */
+  pointer-events: none; /* SANGAT PENTING: Agar saat panah diklik, kliknya tembus ke dropdown */
+}
+
+/* 3. Gaya tombol dropdown (Tanpa SVG) */
+.station-dropdown {
+  background-color: #ffffff;
+  color: #333333;
+  border: 1px solid #cccccc;
+  border-radius: 20px;
+  padding: 6px 35px 6px 16px; /* padding-right 35px agar teks tidak menabrak panah */
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  /* Tidak ada lagi background-image SVG di sini! Sangat bersih. */
+}
+
+/* =========================================
+   MOBILE SIDEBAR (OFF-CANVAS)
+   ========================================= */
+.mobile-sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-sidebar-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  left: -280px; /* Lebar menu tersembunyi */
+  width: 280px;
+  height: 100vh;
+  background-color: #ffffff; /* Warna putih bersih seperti gambar referensi */
+  z-index: 1050;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  transition: left 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-sidebar.open {
+  left: 0;
+}
+
+.mobile-nav-item {
+  padding: 15px 25px;
+  border-bottom: 1px solid #f1f1f1;
+  color: #333;
+  font-weight: 600;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  text-align: left;
+  width: 100%;
+  transition: background 0.2s;
+}
+
+.mobile-nav-item:hover, .mobile-nav-item.active {
+  background-color: #f8f9fc;
+  color: #4e73df;
+}
+
+/* Spacer atas agar konten tidak tertutup header melayang */
+.content-spacer {
+  padding-top: 100px; 
+}
+
+/* Gaya untuk sub-menu stasiun di sidebar */
+.mobile-sub-item {
+  padding: 12px 25px 12px 55px; /* Menjorok ke dalam */
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  width: 100%;
+  transition: all 0.2s;
+}
+
+.mobile-sub-item.active {
+  color: #4e73df;
+  font-weight: 700;
+}/* --- Consolidated Inline Styles --- */
+
+.main-layout-bg {
+  min-height: 100vh;
+  background-color: #f8f9fc;
+}
+
+.brand-text {
+  font-size: 18px;
+  letter-spacing: 0.5px;
+}
+
+.brand-logo {
+  height: 30px;
+}
+
+.divider-line {
+  border-color: #f1f1f1;
+}
+
+.content-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.card-border-bottom {
+  border-bottom-width: 4px !important;
+}
+
+.chart-container {
+  width: 100%;
+  height: 280px;
+}
+
+.mobile-dropdown {
+  border-radius: 20px;
+  padding: 0.4rem 1rem;
+  background-color: #fff;
+}
+
+.header-logo-container {
+  gap: 8px;
+}
+
+.logo-bg {
+  background-color: #284aa133;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+.header-right-controls {
+  gap: 10px;
+}
+
+.btn-no-outline {
+  outline: none;
+}
+
+.footer-nav-title, .footer-info-title {
+  font-size: 14px;
+}
+
+.footer-nav-list, .footer-info-text {
+  font-size: 13px;
+}
+
+.footer-nav-link {
+  text-decoration: none;
+}
+
+.footer-logo-container {
+  gap: 8px;
+}
+
+.footer-brand-text {
+  font-size: 16px;
+  letter-spacing: 0.5px;
+}
+
+.footer-subtitle, .footer-copyright {
+  font-size: 12px;
+}
+
+.footer-logo-wrapper {
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+/* Spacer atas agar konten tidak tertutup header melayang */
+.content-spacer {
+  padding-top: 100px;
+}
+/* Fix topbar / floating header issue */
+@media (max-width: 768px) {
+  .floating-header-container {
+    top: 10px;
+    width: calc(100% - 20px);
+  }
+  .floating-header {
+    padding: 8px 15px;
+    border-radius: 12px; /* make it more square like image on mobile */
+  }
+  .brand-logo {
+    height: 24px;
+  }
+  .brand-text {
+    font-size: 16px;
+  }
+}
+/* Card stat responsive fixes */
+@media (max-width: 768px) {
+  .stat-divider {
+    border-right: none;
+    border-bottom: 1px solid #eaecf4;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+  }
+  .stat-divider:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+}
+/* Desktop layout fixes for 3 cards */
+@media (min-width: 1200px) {
+  .col-xl-4 {
+    flex: 0 0 33.33333%;
+    max-width: 33.33333%;
+  }
+}
