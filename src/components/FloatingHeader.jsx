@@ -1,67 +1,82 @@
 import { useState, useEffect } from 'react';
+import { NavLink, Link } from 'react-router-dom';
+import { Menu } from 'lucide-react';
+import { STATION_LIST } from '../config/stations';
+import { getCurrentTimeStringWIB } from '../utils/date';
 
-export default function FloatingHeader({ activePage, setActivePage, activeStation, setActiveStation, toggleSidebar }) {
-  const [currentTime, setCurrentTime] = useState("");
+export default function FloatingHeader({ activeStation, onStationChange, toggleSidebar }) {
+  const [currentTime, setCurrentTime] = useState(getCurrentTimeStringWIB());
 
   useEffect(() => {
     const timer = setInterval(() => {
-      const now = new Date();
-      setCurrentTime(now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB');
+      setCurrentTime(getCurrentTimeStringWIB());
     }, 1000);
     return () => clearInterval(timer);
   }, []);
 
+  // Membawa parameter stasiun saat bernavigasi
+  const stationParam = `?station=${activeStation}`;
+
   return (
     <div className="floating-header-container">
       <div className="floating-header shadow-lg">
-        
-        {/* BAGIAN KIRI: Logo & Link Desktop */}
+        {/* BAGIAN KIRI: Logo & Navigasi Desktop */}
         <div className="d-flex align-items-center">
-          <div className="d-flex align-items-center mr-4 header-logo-container">
+          <Link to={`/${stationParam}`} className="d-flex align-items-center mr-4 header-logo-container text-decoration-none">
             <div className="logo-bg">
               <img src="/websitelogo.svg" alt="Logo" className="brand-logo" />
             </div>
             <span className="font-weight-bold text-white mb-0 brand-text">
-              EMD<span></span>
+              EMD
             </span>
-          </div>
+          </Link>
 
-          <div className="nav-links d-none d-md-flex align-items-center">
-            <button className={activePage === 'dashboard' ? 'active' : ''} onClick={() => setActivePage('dashboard')}>
+          <nav className="nav-links d-none d-md-flex align-items-center">
+            <NavLink
+              to={`/${stationParam}`}
+              end
+              className={({ isActive }) => (isActive ? 'active' : '')}
+            >
               Dashboard
-            </button>
-            <button className={activePage === 'history' ? 'active' : ''} onClick={() => setActivePage('history')}>
+            </NavLink>
+            <NavLink
+              to={`/history${stationParam}`}
+              className={({ isActive }) => (isActive ? 'active' : '')}
+            >
               Histori Data
-            </button>
-          </div>
+            </NavLink>
+          </nav>
         </div>
 
-        {/* BAGIAN KANAN: Waktu, Dropdown, dan Tombol Mobile */}
+        {/* BAGIAN KANAN: Waktu, Dropdown Stasiun Dinamis, dan Tombol Mobile */}
         <div className="d-flex align-items-center header-right-controls">
-          
           <div className="time-display d-none d-md-block">
             {currentTime}
           </div>
-          
+
           <div className="select-wrapper d-none d-md-block">
-            <select 
+            <select
               className="station-dropdown"
               value={activeStation}
-              onChange={(e) => setActiveStation(Number(e.target.value))}
+              onChange={(e) => onStationChange(Number(e.target.value))}
+              aria-label="Pilih Stasiun Sensor"
             >
-              <option value={1}>Stasiun 1 (BME)</option>
-              <option value={2}>Stasiun 2 (DHT)</option>
+              {STATION_LIST.map((st) => (
+                <option key={st.id} value={st.id}>
+                  {st.shortName}
+                </option>
+              ))}
             </select>
           </div>
 
           {/* Tombol Hamburger (Hanya tampil di Mobile) */}
-          <button 
-            className="btn btn-link d-md-none p-0 text-white ml-2 btn-no-outline" 
+          <button
+            className="btn btn-link d-md-none p-0 text-white ml-2 btn-no-outline d-flex align-items-center"
             onClick={toggleSidebar}
+            aria-label="Buka Menu Navigasi"
           >
-            <i className="fas fa-bars fa-lg"></i>
+            <Menu size={24} />
           </button>
-
         </div>
       </div>
     </div>
