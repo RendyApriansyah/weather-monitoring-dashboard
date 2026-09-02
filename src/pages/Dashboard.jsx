@@ -197,9 +197,9 @@ export default function Dashboard({ activeStation }) {
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData} margin={{ top: 5, right: 10, left: isMobile ? -25 : -10, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" opacity={0.3} vertical={false} />
-                    <XAxis dataKey="timeLabel" tick={{ fontSize: 12, fill: '#888' }} tickMargin={10} minTickGap={40} />
-                    <YAxis tick={{ fontSize: 12, fill: '#888' }} domain={['auto', 'auto']} />
-                    <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }} />
+                    <XAxis dataKey="timeLabel" tick={{ fontSize: 12, fill: 'var(--color-text-muted)' }} tickMargin={10} minTickGap={40} />
+                    <YAxis tick={{ fontSize: 12, fill: 'var(--color-text-muted)' }} domain={['auto', 'auto']} />
+                    <Tooltip contentStyle={{ borderRadius: 'var(--radius-md)', border: 'none', boxShadow: 'var(--shadow-sticky)' }} />
                     <Line type="monotone" name={chart.name} dataKey={chart.dataKey} stroke={chart.stroke} strokeWidth={3} dot={false} activeDot={{ r: 8 }} />
                   </LineChart>
                 </ResponsiveContainer>

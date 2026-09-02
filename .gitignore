@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# AI / LLM agent local directories
+.claude/
+.gemini/
+.cursor/
+.cline/
+.roo/
+.cody/

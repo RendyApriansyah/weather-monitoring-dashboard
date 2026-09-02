@@ -1,3 +1,25 @@
+:root {
+  --color-primary: #4e73df;
+  --color-brand-accent: #284aa1;
+  --color-brand-accent-transparent: #284aa133;
+  --color-temperature: #d39e00;
+  --color-bg-wash: #f8f9fc;
+  --color-surface: #ffffff;
+  --color-divider: #eaecf4;
+  --color-text-main: #333333;
+  --color-text-muted: #888888;
+  --color-border-dark: #cccccc;
+  
+  --radius-sm: 4px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 50px;
+  
+  --shadow-floating: 0 10px 30px rgba(0, 0, 0, 0.2);
+  --shadow-sticky: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-drawer: 4px 0 10px rgba(0,0,0,0.5);
+}
+
 .sidebar {
   transition: all 0.3s ease-in-out !important;
 }
@@ -16,7 +38,7 @@
     height: 100vh;
     z-index: 9999;
     width: 100px !important; /* Buka lebar agar teks terbaca jelas */
-    box-shadow: 4px 0 10px rgba(0,0,0,0.5);
+    box-shadow: var(--shadow-drawer);
   }
 
   /* Teks topbar */
@@ -34,7 +56,7 @@
   /* Sekat Statistik */
   .stat-divider {
     border-right: none !important;
-    border-bottom: 1px solid #eaecf4;
+    border-bottom: 1px solid var(--color-divider);
     padding-bottom: 1rem;
     margin-bottom: 1rem;
   }
@@ -73,7 +95,7 @@
 
   /* Sekat Statistik */
   .stat-divider {
-    border-right: 1px solid #eaecf4;
+    border-right: 1px solid var(--color-divider);
   }
   .stat-divider:last-child {
     border-right: none;
@@ -81,10 +103,10 @@
 }
 
 .text-temperature {
-  color: #d39e00 !important; /* Kuning keemasan/mustard yang aman dibaca di layar putih */
+  color: var(--color-temperature) !important; /* Kuning keemasan/mustard yang aman dibaca di layar putih */
 }
 .border-bottom-temperature {
-  border-bottom: 4px solid #d39e00 !important;
+  border-bottom: 4px solid var(--color-temperature) !important;
 }
 
 /* 2. Hierarki Visual Tabel (Sticky Header & Scroll) */
@@ -96,9 +118,9 @@
 .table-sticky-header th {
   position: sticky;
   top: 0;
-  background-color: #f8f9fc !important; /* Menyamai warna thead-light */
+  background-color: var(--color-bg-wash) !important; /* Menyamai warna thead-light */
   z-index: 10;
-  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sticky);
 }
 
 .floating-header-container {
@@ -112,20 +134,20 @@
 }
 
 .floating-header {
-  background-color: #284aa1;
-  border-radius: 50px;
+  background-color: var(--color-brand-accent);
+  border-radius: var(--radius-pill);
   padding: 10px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  border: 1px solid #333333;
+  box-shadow: var(--shadow-floating);
+  border: 1px solid var(--color-text-main);
 }
 
 .nav-links button {
   background: transparent;
   border: none;
-  color: #888888;
+  color: rgba(255, 255, 255, 0.7);
   font-weight: 600;
   font-size: 14px;
   margin-right: 25px;
@@ -133,22 +155,28 @@
   outline: none;
 }
 
+.nav-links button:focus-visible {
+  outline: 2px solid var(--color-surface);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
 .nav-links button:hover {
-  color: #cccccc;
+  color: var(--color-surface);
 }
 
 .nav-links button.active {
-  color: #ffffff;
+  color: var(--color-surface);
 }
 
 .time-display {
-  background-color:  #ffffff;
+  background-color:  var(--color-surface);
   padding: 6px 16px;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   font-size: 13px;
   font-weight: 600;
-  color: #1a1a1a;
-  border: 1px solid #2a2a2a;
+  color: var(--color-text-main);
+  border: 1px solid var(--color-text-main);
 }
 
 /* =========================================
@@ -172,16 +200,16 @@
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 6px solid #333333; /* Ganti #333333 untuk mengubah WARNA PANAH */
+  border-top: 6px solid var(--color-text-main); /* Ganti var(--color-text-main) untuk mengubah WARNA PANAH */
   pointer-events: none; /* SANGAT PENTING: Agar saat panah diklik, kliknya tembus ke dropdown */
 }
 
 /* 3. Gaya tombol dropdown (Tanpa SVG) */
 .station-dropdown {
-  background-color: #ffffff;
-  color: #333333;
-  border: 1px solid #cccccc;
-  border-radius: 20px;
+  background-color: var(--color-surface);
+  color: var(--color-text-main);
+  border: 1px solid var(--color-border-dark);
+  border-radius: var(--radius-lg);
   padding: 6px 35px 6px 16px; /* padding-right 35px agar teks tidak menabrak panah */
   font-size: 13px;
   font-weight: 600;
@@ -219,9 +247,9 @@
   left: -280px; /* Lebar menu tersembunyi */
   width: 280px;
   height: 100vh;
-  background-color: #ffffff; /* Warna putih bersih seperti gambar referensi */
+  background-color: var(--color-surface); /* Warna putih bersih seperti gambar referensi */
   z-index: 1050;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-drawer);
   transition: left 0.3s ease;
   display: flex;
   flex-direction: column;
@@ -233,8 +261,8 @@
 
 .mobile-nav-item {
   padding: 15px 25px;
-  border-bottom: 1px solid #f1f1f1;
-  color: #333;
+  border-bottom: 1px solid var(--color-divider);
+  color: var(--color-text-main);
   font-weight: 600;
   background: none;
   border-left: none;
@@ -246,8 +274,8 @@
 }
 
 .mobile-nav-item:hover, .mobile-nav-item.active {
-  background-color: #f8f9fc;
-  color: #4e73df;
+  background-color: var(--color-bg-wash);
+  color: var(--color-primary);
 }
 
 /* Spacer atas agar konten tidak tertutup header melayang */
@@ -260,7 +288,7 @@
   padding: 12px 25px 12px 55px; /* Menjorok ke dalam */
   background: transparent;
   border: none;
-  color: #666;
+  color: var(--color-text-muted);
   font-size: 14px;
   font-weight: 500;
   text-align: left;
@@ -269,13 +297,13 @@
 }
 
 .mobile-sub-item.active {
-  color: #4e73df;
+  color: var(--color-primary);
   font-weight: 700;
 }/* --- Consolidated Inline Styles --- */
 
 .main-layout-bg {
   min-height: 100vh;
-  background-color: #f8f9fc;
+  background-color: var(--color-bg-wash);
 }
 
 .brand-text {
@@ -288,7 +316,7 @@
 }
 
 .divider-line {
-  border-color: #f1f1f1;
+  border-color: var(--color-divider);
 }
 
 .content-container {
@@ -306,9 +334,9 @@
 }
 
 .mobile-dropdown {
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   padding: 0.4rem 1rem;
-  background-color: #fff;
+  background-color: var(--color-surface);
 }
 
 .header-logo-container {
@@ -316,8 +344,8 @@
 }
 
 .logo-bg {
-  background-color: #284aa133;
-  border-radius: 4px;
+  background-color: var(--color-brand-accent-transparent);
+  border-radius: var(--radius-sm);
   padding: 2px 6px;
 }
 
@@ -355,7 +383,7 @@
 }
 
 .footer-logo-wrapper {
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 2px 6px;
 }
 /* Spacer atas agar konten tidak tertutup header melayang */
@@ -382,7 +410,7 @@
 @media (max-width: 768px) {
   .stat-divider {
     border-right: none;
-    border-bottom: 1px solid #eaecf4;
+    border-bottom: 1px solid var(--color-divider);
     padding-bottom: 15px;
     margin-bottom: 15px;
   }

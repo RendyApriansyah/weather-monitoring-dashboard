@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-02T13:11:00Z",
+  "title": "Design System: EMD - Environmental Weather Dashboard",
+  "extensions": {
+    "colorMeta": {
+      "brand-accent": { "role": "primary", "displayName": "Header Deep Blue", "canonical": "#284aa1", "tonalRamp": ["#081023", "#102146", "#183269", "#20438c", "#284aa1", "#335ebf", "#5277cd", "#8ca5e1"] },
+      "primary": { "role": "primary", "displayName": "Dashboard Blue", "canonical": "#4e73df", "tonalRamp": ["#10172d", "#202e5a", "#304587", "#405cb4", "#4e73df", "#6e8be5", "#9eafef", "#ced8f7"] },
+      "temperature-alert": { "role": "secondary", "displayName": "Temperature Mustard", "canonical": "#d39e00", "tonalRamp": ["#2a1f00", "#543f00", "#7f5f00", "#a97e00", "#d39e00", "#ffc31a", "#ffd666", "#ffeab3"] },
+      "chart-success": { "role": "success", "displayName": "Chart Success", "canonical": "#1cc88a", "tonalRamp": [] },
+      "chart-info": { "role": "info", "displayName": "Chart Info", "canonical": "#36b9cc", "tonalRamp": [] },
+      "neutral-border-dark": { "role": "neutral", "displayName": "Neutral Border Dark", "canonical": "#cccccc", "tonalRamp": [] }
+    },
+    "typographyMeta": {
+      "xs": { "fontSize": "12px" },
+      "sm": { "fontSize": "13px" },
+      "md": { "fontSize": "14px" },
+      "lg": { "fontSize": "16px" },
+      "xl": { "fontSize": "18px" }
+    },
+    "shadows": [
+      { "name": "floating-controls", "value": "0 10px 30px rgba(0, 0, 0, 0.2)", "purpose": "Efek mengambang tebal eksklusif untuk Floating Header" }
+    ],
+    "breakpoints": [
+      { "name": "md", "value": "768px" },
+      { "name": "xl", "value": "1200px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Floating Header",
+      "kind": "nav",
+      "refersTo": "floating-header",
+      "description": "Header navigasi utama yang melayang.",
+      "html": "<div class=\"ds-floating-header\">\n  <div class=\"ds-logo\">EMD</div>\n  <div class=\"ds-nav-links\">\n    <button class=\"ds-nav-btn ds-active\">Dashboard</button>\n    <button class=\"ds-nav-btn\">Histori</button>\n  </div>\n</div>",
+      "css": ".ds-floating-header { background-color: #284aa1; border-radius: 50px; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); border: 1px solid #333333; color: white; font-family: system-ui, sans-serif; } .ds-logo { font-weight: bold; font-size: 18px; } .ds-nav-links { display: flex; } .ds-nav-btn { background: transparent; border: none; color: #888888; font-weight: 600; font-size: 14px; margin-right: 15px; cursor: pointer; transition: all 0.3s ease; } .ds-nav-btn:hover { color: #cccccc; } .ds-nav-btn.ds-active { color: #ffffff; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Command Center",
+    "overview": "Tegas, fungsional, dan berorientasi pada data murni. Aplikasi ini bertindak sebagai pusat kendali untuk memantau data cuaca sensor lokal tanpa ornamen atau hiasan visual yang berlebihan. Desain memprioritaskan efisiensi ruang layar, dengan hirarki visual yang dibangun agar angka-angka real-time dapat diidentifikasi secara instan.",
+    "keyCharacteristics": [
+      "Segar & Modern: Memanfaatkan kontras tinggi antara latar belakang terang dan aksen biru yang memberikan kesan bersih.",
+      "Tegas dan Membulat Halus: Menggunakan siluet kapsul (pill) yang modern pada elemen pengontrol navigasi tanpa menghilangkan sifat fungsional aplikasi.",
+      "Utilitarian: Semua bentuk bayangan (shadow) atau batas difungsikan khusus sebagai pemisah data, bukan sekadar dekorasi."
+    ],
+    "rules": [],
+    "dos": [
+      "Do pertahankan border-radius 50px pada Floating Header baik di versi desktop maupun mobile untuk konsistensi bahasa bentuk (\"Tegas dan Membulat Halus\").",
+      "Do sajikan angka sensor secara instan tanpa animasi dekoratif panjang yang memperlambat akses ke data real-time."
+    ],
+    "donts": [
+      "Don't hilangkan batas kontras pada Floating Header agar elemen tersebut tidak menyatu (hilang) ketika bergesekan dengan konten.",
+      "Don't tambahkan terlalu banyak warna primer lain. Biru tua khusus untuk kerangka navigasi, biru standar untuk aksi, dan mustard untuk indikator suhu."
+    ]
+  }
+}
+
