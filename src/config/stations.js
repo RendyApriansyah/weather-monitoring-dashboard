@@ -1,23 +1,23 @@
 /**
- * Konfigurasi Terpusat Seluruh Stasiun Sensor IoT EMD
+ * Centralized Configuration for all EMD IoT Sensor Stations
  * 
- * Untuk menambahkan Stasiun baru (misal Stasiun 3):
- * Cukup tambahkan entri objek baru pada STATIONS di bawah ini
- * tanpa perlu mengubah kode komponen tampilan.
+ * To add a new station (e.g. Station 3):
+ * Simply add a new object entry to STATIONS below
+ * without needing to modify UI component code.
  */
 export const STATIONS = {
   1: {
     id: 1,
-    name: 'Stasiun 1 (BME280)',
-    shortName: 'Stasiun 1 (BME)',
+    name: 'Station 1 (BME280)',
+    shortName: 'Station 1 (BME)',
     sensor: 'BME280',
     tableName: 'sensor_data',
     rpcName: 'get_historical_stats',
     rpcStatsPrefix: 'pres', // pres_max, pres_avg, pres_min
     parameter3: {
       key: 'pressure',
-      label: 'Tekanan Udara',
-      shortLabel: 'Tekanan',
+      label: 'Atmospheric Pressure',
+      shortLabel: 'Pressure',
       unit: 'hPa',
       iconName: 'Wind',
       colorClass: 'success',
@@ -28,16 +28,16 @@ export const STATIONS = {
   },
   2: {
     id: 2,
-    name: 'Stasiun 2 (DHT & BH1750)',
-    shortName: 'Stasiun 2 (DHT)',
+    name: 'Station 2 (DHT 22 & BH1750)',
+    shortName: 'Station 2 (DHT)',
     sensor: 'DHT & BH1750',
     tableName: 'station_2_data',
     rpcName: 'get_station2_stats',
     rpcStatsPrefix: 'light', // light_max, light_avg, light_min
     parameter3: {
       key: 'light_intensity',
-      label: 'Intensitas Cahaya',
-      shortLabel: 'Cahaya',
+      label: 'Light Intensity',
+      shortLabel: 'Light',
       unit: 'Lux',
       iconName: 'Sun',
       colorClass: 'info',

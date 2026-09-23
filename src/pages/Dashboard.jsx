@@ -29,17 +29,17 @@ export default function Dashboard({ activeStation = 1 }) {
   const p3 = stationConfig.parameter3;
   const p3Icon = ICON_COMPONENTS[p3.iconName] || Sun;
 
-  // 1. Kartu Pengukuran Real-Time
+  // 1. Real-Time Measurement Cards
   const metricCards = [
     {
-      title: 'Suhu Saat Ini',
+      title: 'Current Temperature',
       value: `${sensorData.temperature} °C`,
       Icon: Thermometer,
       textClass: 'text-temperature',
       borderClass: 'border-bottom-temperature'
     },
     {
-      title: 'Kelembapan',
+      title: 'Humidity',
       value: `${sensorData.humidity}%`,
       Icon: Droplets,
       textClass: 'text-primary',
@@ -54,25 +54,25 @@ export default function Dashboard({ activeStation = 1 }) {
     }
   ];
 
-  // 2. Ringkasan Statistik Dinamis (RPC)
+  // 2. Dynamic Statistical Summary (RPC)
   const prefix = stationConfig.rpcStatsPrefix;
   const statsList = [
     {
-      title: 'Statistik Suhu (°C)',
+      title: 'Temperature Statistics (°C)',
       textClass: 'text-temperature',
       max: stats?.temp_max ?? '--',
       avg: stats?.temp_avg ?? '--',
       min: stats?.temp_min ?? '--'
     },
     {
-      title: 'Statistik Kelembapan (%)',
+      title: 'Humidity Statistics (%)',
       textClass: 'text-primary',
       max: stats?.hum_max ?? '--',
       avg: stats?.hum_avg ?? '--',
       min: stats?.hum_min ?? '--'
     },
     {
-      title: `Statistik ${p3.shortLabel} (${p3.unit})`,
+      title: `${p3.shortLabel} Statistics (${p3.unit})`,
       textClass: p3.textClass,
       max: stats?.[`${prefix}_max`] ?? '--',
       avg: stats?.[`${prefix}_avg`] ?? '--',
@@ -80,24 +80,24 @@ export default function Dashboard({ activeStation = 1 }) {
     }
   ];
 
-  // 3. Konfigurasi Deret Grafik
+  // 3. Chart Series Configuration
   const charts = [
     {
-      title: 'Grafik Tren Suhu (°C)',
+      title: 'Temperature Trend (°C)',
       textClass: 'text-temperature',
       dataKey: 'temperature',
-      name: 'Suhu (°C)',
+      name: 'Temperature (°C)',
       stroke: 'var(--color-temperature)'
     },
     {
-      title: 'Grafik Tren Kelembapan (%)',
+      title: 'Humidity Trend (%)',
       textClass: 'text-primary',
       dataKey: 'humidity',
-      name: 'Kelembapan (%)',
+      name: 'Humidity (%)',
       stroke: 'var(--color-primary)'
     },
     {
-      title: `Grafik Tren ${p3.label} (${p3.unit})`,
+      title: `${p3.label} Trend (${p3.unit})`,
       textClass: p3.textClass,
       dataKey: 'parameter3_value',
       name: `${p3.shortLabel} (${p3.unit})`,
@@ -107,7 +107,7 @@ export default function Dashboard({ activeStation = 1 }) {
 
   return (
     <>
-      {/* KARTU METRIK UTAMA */}
+      {/* PRIMARY METRIC CARDS */}
       <div className="row mb-4">
         {metricCards.map((card, idx) => {
           const CardIcon = card.Icon;
@@ -131,28 +131,28 @@ export default function Dashboard({ activeStation = 1 }) {
         })}
       </div>
 
-      {/* HEADER SECTION ANALISIS & FILTER RENTANG */}
+      {/* ANALYSIS SECTION HEADER & RANGE FILTER */}
       <div className="d-flex justify-content-between align-items-center mb-3 mt-4 mt-md-5">
         <h1 className="h5 mb-0 text-gray-800 font-weight-bold">
-          Analisis Historis ({stationConfig.sensor})
+          Historical Analysis ({stationConfig.sensor})
         </h1>
         <div className="d-block d-md-none">
           <select
             className="form-select form-select-sm shadow-sm font-weight-bold text-primary border-0 mobile-dropdown"
             value={days}
             onChange={(e) => setDays(Number(e.target.value))}
-            aria-label="Pilih Interval Waktu"
+            aria-label="Select Time Range"
           >
-            <option value={1}>24 Jam Terakhir</option>
-            <option value={7}>7 Hari Terakhir</option>
-            <option value={30}>30 Hari Terakhir</option>
+            <option value={1}>Last 24 Hours</option>
+            <option value={7}>Last 7 Days</option>
+            <option value={30}>Last 30 Days</option>
           </select>
         </div>
         <div className="d-none d-md-block btn-group shadow-sm">
           {[
-            { val: 1, label: '24 Jam' },
-            { val: 7, label: '7 Hari' },
-            { val: 30, label: '30 Hari' }
+            { val: 1, label: '24 Hours' },
+            { val: 7, label: '7 Days' },
+            { val: 30, label: '30 Days' }
           ].map(({ val, label }) => (
             <button
               key={val}
@@ -165,7 +165,7 @@ export default function Dashboard({ activeStation = 1 }) {
         </div>
       </div>
 
-      {/* KARTU STATISTIK MAX / AVG / MIN */}
+      {/* MAX / AVG / MIN STATISTICS CARDS */}
       <div className="card shadow-sm rounded-lg border-0 mb-4 p-4 bg-white">
         <div className="row text-center">
           {statsList.map((stat, idx) => (
@@ -181,7 +181,7 @@ export default function Dashboard({ activeStation = 1 }) {
         </div>
       </div>
 
-      {/* BAGAN GRAFIK TREN (RECHARTS) */}
+      {/* TREND CHARTS (RECHARTS) */}
       <div className="row">
         {charts.map((chart, idx) => (
           <div key={idx} className="col-12 mb-4">

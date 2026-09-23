@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabaseClient';
 import { formatTimeShort, formatDateShort } from '../utils/date';
 
 /**
- * Custom Hook untuk memuat statistik ringkasan (RPC) dan data grafik tren historis
+ * Custom Hook to load summary statistics (RPC) and historical trend chart data
  */
 export function useHistoricalData(stationConfig, days = 1) {
   const [stats, setStats] = useState(null);
@@ -21,7 +21,7 @@ export function useHistoricalData(stationConfig, days = 1) {
       setError(null);
 
       try {
-        // 1. Panggil RPC untuk statistik (Max / Avg / Min)
+        // 1. Call RPC for statistics (Max / Avg / Min)
         const { data: statsData, error: rpcError } = await supabase.rpc(rpcName, {
           interval_days: days
         });
@@ -34,7 +34,7 @@ export function useHistoricalData(stationConfig, days = 1) {
           setStats(statsData[0]);
         }
 
-        // 2. Ambil data deret waktu untuk grafik
+        // 2. Fetch time series data for charts
         const fromDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
         const selectQuery = `created_at, temperature, humidity, ${p3Key}`;
 
@@ -55,7 +55,7 @@ export function useHistoricalData(stationConfig, days = 1) {
           setChartData(formatted);
         }
       } catch (err) {
-        console.error(`[useHistoricalData] Gagal memuat data grafik (${tableName}):`, err);
+        console.error(`[useHistoricalData] Failed to load chart data (${tableName}):`, err);
         if (isMounted) setError(err);
       } finally {
         if (isMounted) setIsLoading(false);

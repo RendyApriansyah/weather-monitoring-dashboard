@@ -14,13 +14,13 @@ export default function FloatingHeader({ activeStation, onStationChange, toggleS
     return () => clearInterval(timer);
   }, []);
 
-  // Membawa parameter stasiun saat bernavigasi
+  // Preserve station parameter when navigating
   const stationParam = `?station=${activeStation}`;
 
   return (
     <div className="floating-header-container">
       <div className="floating-header shadow-lg">
-        {/* BAGIAN KIRI: Logo & Navigasi Desktop */}
+        {/* LEFT SECTION: Logo & Desktop Navigation */}
         <div className="d-flex align-items-center">
           <Link to={`/${stationParam}`} className="d-flex align-items-center mr-4 header-logo-container text-decoration-none">
             <div className="logo-bg">
@@ -43,12 +43,12 @@ export default function FloatingHeader({ activeStation, onStationChange, toggleS
               to={`/history${stationParam}`}
               className={({ isActive }) => (isActive ? 'active' : '')}
             >
-              Histori Data
+              Data History
             </NavLink>
           </nav>
         </div>
 
-        {/* BAGIAN KANAN: Waktu, Dropdown Stasiun Dinamis, dan Tombol Mobile */}
+        {/* RIGHT SECTION: Time, Dynamic Station Dropdown, and Mobile Button */}
         <div className="d-flex align-items-center header-right-controls">
           <div className="time-display d-none d-md-block">
             {currentTime}
@@ -59,7 +59,7 @@ export default function FloatingHeader({ activeStation, onStationChange, toggleS
               className="station-dropdown"
               value={activeStation}
               onChange={(e) => onStationChange(Number(e.target.value))}
-              aria-label="Pilih Stasiun Sensor"
+              aria-label="Select Sensor Station"
             >
               {STATION_LIST.map((st) => (
                 <option key={st.id} value={st.id}>
@@ -69,11 +69,11 @@ export default function FloatingHeader({ activeStation, onStationChange, toggleS
             </select>
           </div>
 
-          {/* Tombol Hamburger (Hanya tampil di Mobile) */}
+          {/* Hamburger Button (Mobile only) */}
           <button
             className="btn btn-link d-md-none p-0 text-white ml-2 btn-no-outline d-flex align-items-center"
             onClick={toggleSidebar}
-            aria-label="Buka Menu Navigasi"
+            aria-label="Open Navigation Menu"
           >
             <Menu size={24} />
           </button>

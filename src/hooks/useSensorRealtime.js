@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
 /**
- * Custom Hook untuk pemantauan data sensor real-time
- * Mendukung pembacaan awal + WebSocket Supabase listener
+ * Custom Hook for real-time sensor data monitoring
+ * Supports initial fetch + WebSocket Supabase listener
  */
 export function useSensorRealtime(stationConfig) {
   const [sensorData, setSensorData] = useState({
@@ -47,7 +47,7 @@ export function useSensorRealtime(stationConfig) {
           }
         }
       } catch (err) {
-        console.error(`[useSensorRealtime] Gagal mengambil data awal ${tableName}:`, err);
+        console.error(`[useSensorRealtime] Failed to fetch initial data for ${tableName}:`, err);
         if (isMounted) setError(err);
       } finally {
         if (isMounted) setIsLoading(false);

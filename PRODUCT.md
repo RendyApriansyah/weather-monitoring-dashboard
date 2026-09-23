@@ -7,35 +7,34 @@
 web
 
 ## Users
-- Peneliti / Akademisi yang membutuhkan data historis cuaca lokal.
-- Admin / Teknisi yang mengelola perangkat IoT (sensor).
-- Masyarakat umum di sekitar Palembang yang memantau kondisi cuaca.
+- Researchers / Academics requiring local historical weather data.
+- Admins / Technicians managing IoT sensor hardware.
+- General public around Palembang monitoring local weather conditions.
 
 ## Product Purpose
-Menyediakan pemantauan kondisi lingkungan (suhu, kelembapan, tekanan udara, dan intensitas cahaya) secara real-time langsung dari perangkat sensor IoT, serta memfasilitasi analisis tren historis.
+Provide real-time environmental monitoring (temperature, humidity, atmospheric pressure, and light intensity) streamed directly from IoT sensor hardware, and facilitate historical trend analysis.
 
 ## Positioning
-Mengandalkan data langsung dari perangkat IoT lokal yang memberikan tingkat akurasi dan relevansi hiper-lokal (Palembang) dibandingkan perkiraan dari aplikasi cuaca global atau publik.
+Relying on direct data feeds from local IoT hardware that deliver hyper-local accuracy and relevance (Palembang) compared to estimations from global or generalized public weather apps.
 
 ## Operating Context
-Diakses melalui peramban (desktop maupun mobile) untuk mengevaluasi data cuaca saat ini dan menarik kesimpulan dari riwayat data yang direkam selama beberapa periode waktu.
+Accessed via web browsers (both desktop and mobile) to evaluate current environmental conditions and derive insights from historical readings recorded over configurable time windows.
 
 ## Capabilities and Constraints
-- Wajib menggunakan Supabase sebagai backend.
-- Harus kompatibel dan mendemonstrasikan metrik dari sensor BME280 (Stasiun 1) serta DHT & BH1750 (Stasiun 2).
-- Struktur tabel database telah tetap (`sensor_data` dan `station_2_data`).
+- Must use Supabase as the backend.
+- Must support and showcase metrics from BME280 sensors (Station 1) and DHT & BH1750 sensors (Station 2).
+- Fixed database table schemas (`sensor_data` and `station_2_data`).
 
 ## Brand Commitments
-- Nama Produk: EMD (Enviromental Weather Dashboard).
-- Logo: Menggunakan `/websitelogo.svg`.
+- Product Name: EMD (Environmental Weather Dashboard).
+- Logo: Uses `/websitelogo.svg`.
 
 ## Evidence on Hand
-- Integrasi *real-time* Supabase (insert events).
-- Implementasi grafik garis (Recharts) yang menangani rentang interval waktu.
-- Teks footer yang mencantumkan "Palembang, Sumatera Selatan" dan hak cipta.
+- Real-time Supabase integration (insert events).
+- Line chart implementation (Recharts) handling variable time range intervals.
+- Footer copy citing "Palembang, South Sumatra" and copyright notice.
 
 ## Product Principles
-- **Akurasi & Transparansi:** Tampilkan data sensor secara mentah dan cepat tanpa manipulasi.
-- **Keterbacaan Instan:** Nilai *real-time* harus menonjol dan dapat dibaca dalam sekali lihat.
-- **Analisis Mendalam:** Sediakan visualisasi tren historis yang jelas bagi peneliti atau teknisi untuk diagnosis.
-
+- **Accuracy & Transparency:** Display raw sensor data swiftly without manipulation.
+- **Instant Readability:** Real-time values must stand out and be readable at a glance.
+- **In-Depth Analysis:** Provide clear historical trend visualizations for researchers and technicians to diagnose patterns.

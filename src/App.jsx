@@ -30,14 +30,14 @@ function App() {
 
   return (
     <div className="main-layout main-layout-bg w-100 position-relative d-flex flex-column">
-      {/* HEADER MELAYANG */}
+      {/* FLOATING HEADER */}
       <FloatingHeader
         activeStation={activeStation}
         onStationChange={handleStationChange}
         toggleSidebar={() => setIsMobileSidebarOpen(true)}
       />
 
-      {/* OVERLAY & SIDEBAR MOBILE (OFF-CANVAS) */}
+      {/* MOBILE SIDEBAR & OVERLAY (OFF-CANVAS) */}
       <div
         className={`mobile-sidebar-overlay ${isMobileSidebarOpen ? 'open' : ''}`}
         onClick={() => setIsMobileSidebarOpen(false)}
@@ -65,18 +65,18 @@ function App() {
             className={`mobile-nav-item d-flex align-items-center ${isCurrentPath('/history') ? 'active' : ''}`}
             onClick={() => handlePageNavigation('/history')}
           >
-            <Table size={18} className="mr-3" /> Histori Data
+            <Table size={18} className="mr-3" /> Data History
           </button>
 
           <hr className="my-2 mx-3 divider-line" />
 
-          {/* MENU LIPAT PILIH STASIUN DINAMIS */}
+          {/* DYNAMIC STATION SELECTION ACCORDION */}
           <button
             className="mobile-nav-item d-flex justify-content-between align-items-center"
             onClick={() => setIsStationMenuOpen(!isStationMenuOpen)}
           >
             <span className="d-flex align-items-center">
-              <Radio size={18} className="mr-3" /> Pilih Stasiun
+              <Radio size={18} className="mr-3" /> Select Station
             </span>
             {isStationMenuOpen ? (
               <ChevronUp size={16} className="text-muted" />
@@ -104,7 +104,7 @@ function App() {
         </div>
       </div>
 
-      {/* KONTEN UTAMA DENGAN ROUTING */}
+      {/* MAIN CONTENT WITH ROUTING */}
       <main className="content-spacer content-container container-fluid px-3 px-md-5 flex-grow-1">
         <Routes>
           <Route path="/" element={<Dashboard key={activeStation} activeStation={activeStation} />} />

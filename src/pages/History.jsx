@@ -38,12 +38,12 @@ export default function History({ activeStation = 1 }) {
 
         if (error) throw error;
         if (!data || data.length === 0) {
-          alert('Tidak ada data terekam pada rentang tanggal tersebut.');
+          alert('No data recorded for the selected date range.');
           return;
         }
         dataToExport = data;
       } else {
-        // Ambil hingga 1000 data terakhir jika filter tanggal kosong
+        // Fetch up to 1000 latest records if date filter is empty
         const { data, error } = await supabase
           .from(tableName)
           .select('*')
@@ -52,15 +52,15 @@ export default function History({ activeStation = 1 }) {
 
         if (error) throw error;
         if (!data || data.length === 0) {
-          alert(`Belum ada data terekam untuk ${stationConfig.name}.`);
+          alert(`No data recorded yet for ${stationConfig.name}.`);
           return;
         }
         dataToExport = data;
       }
 
       const fileName = startDate && endDate
-        ? `Laporan_${stationConfig.shortName.replace(/\s+/g, '_')}_${startDate}_${endDate}.csv`
-        : `Data_${stationConfig.shortName.replace(/\s+/g, '_')}_Terbaru.csv`;
+        ? `Report_${stationConfig.shortName.replace(/\s+/g, '_')}_${startDate}_${endDate}.csv`
+        : `Data_${stationConfig.shortName.replace(/\s+/g, '_')}_Latest.csv`;
 
       exportSensorDataToCSV({
         data: dataToExport,
@@ -68,8 +68,8 @@ export default function History({ activeStation = 1 }) {
         filename: fileName
       });
     } catch (error) {
-      console.error('Gagal mengekspor CSV:', error);
-      alert('Terjadi kesalahan jaringan saat mengunduh laporan CSV.');
+      console.error('Failed to export CSV:', error);
+      alert('A network error occurred while downloading the CSV report.');
       setDownloadError(error.message);
     } finally {
       setIsDownloading(false);
@@ -79,7 +79,7 @@ export default function History({ activeStation = 1 }) {
   return (
     <>
       <p className="mb-4 text-gray-600">
-        Menampilkan riwayat data operasional <b>{stationConfig.name}</b>. Gunakan fitur paginasi di bawah tabel untuk navigasi, atau filter rentang tanggal untuk mengunduh laporan utuh.
+        Displaying operational data history for <b>{stationConfig.name}</b>. Use pagination controls below the table to navigate, or filter by date range to download full reports.
       </p>
 
       {downloadError && (
@@ -89,29 +89,29 @@ export default function History({ activeStation = 1 }) {
       )}
 
       <div className="card shadow-sm border-0 mb-4">
-        {/* HEADER TABEL & FILTER TANGGAL */}
+        {/* TABLE HEADER & DATE FILTER */}
         <div className="card-header py-3 bg-white d-flex flex-column flex-md-row justify-content-between align-items-md-center">
           <h6 className="m-0 font-weight-bold text-primary mb-3 mb-md-0">
-            Tabel Data Pengukuran ({stationConfig.sensor})
+            Measurement Data Table ({stationConfig.sensor})
           </h6>
           <div className="d-flex flex-column flex-md-row align-items-md-center">
             <div className="d-flex align-items-center mb-2 mb-md-0 mr-md-3">
-              <small className="text-muted mr-2 d-none d-md-inline">Mulai:</small>
+              <small className="text-muted mr-2 d-none d-md-inline">Start:</small>
               <input
                 type="date"
                 className="form-control form-control-sm"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                aria-label="Tanggal Mulai"
+                aria-label="Start Date"
               />
               <span className="mx-2">-</span>
-              <small className="text-muted mr-2 d-none d-md-inline">Akhir:</small>
+              <small className="text-muted mr-2 d-none d-md-inline">End:</small>
               <input
                 type="date"
                 className="form-control form-control-sm"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                aria-label="Tanggal Akhir"
+                aria-label="End Date"
               />
             </div>
             <button
@@ -124,22 +124,22 @@ export default function History({ activeStation = 1 }) {
               ) : (
                 <Download size={16} className="mr-2" />
               )}
-              {isDownloading ? 'Memproses...' : 'Ekspor CSV'}
+              {isDownloading ? 'Processing...' : 'Export CSV'}
             </button>
           </div>
         </div>
 
-        {/* ISI TABEL */}
+        {/* TABLE BODY */}
         <div className="card-body p-0">
           <div className="table-responsive table-scrollable-container m-0">
             <table className="table table-bordered table-hover table-striped table-sticky-header mb-0" width="100%" cellSpacing="0">
               <thead className="thead-light">
                 <tr>
                   <th>No</th>
-                  <th>Suhu (°C)</th>
-                  <th>Kelembapan (%)</th>
+                  <th>Temperature (°C)</th>
+                  <th>Humidity (%)</th>
                   <th>{p3.label} ({p3.unit})</th>
-                  <th>Waktu Pencatatan</th>
+                  <th>Recorded Time</th>
                 </tr>
               </thead>
               <tbody>
@@ -147,13 +147,13 @@ export default function History({ activeStation = 1 }) {
                   <tr>
                     <td colSpan="5" className="text-center py-5">
                       <Loader2 size={24} className="animate-spin d-inline mr-2 text-primary" />
-                      Memuat data {stationConfig.shortName}...
+                      Loading {stationConfig.shortName} data...
                     </td>
                   </tr>
                 ) : tableData.length === 0 ? (
                   <tr>
                     <td colSpan="5" className="text-center py-5">
-                      Belum ada data tersedia untuk {stationConfig.name}
+                      No data available for {stationConfig.name}
                     </td>
                   </tr>
                 ) : (
@@ -172,10 +172,10 @@ export default function History({ activeStation = 1 }) {
           </div>
         </div>
 
-        {/* FOOTER TABEL / PAGINASI */}
+        {/* TABLE FOOTER / PAGINATION */}
         <div className="card-footer bg-white d-flex justify-content-between align-items-center py-3">
           <small className="text-muted font-weight-bold">
-            Halaman {currentPage} dari {totalPages}
+            Page {currentPage} of {totalPages}
           </small>
           <div className="d-flex align-items-center">
             <button
@@ -183,14 +183,14 @@ export default function History({ activeStation = 1 }) {
               disabled={currentPage === 1 || isLoading}
               className="btn btn-sm btn-outline-primary mr-2 font-weight-bold d-flex align-items-center"
             >
-              <ChevronLeft size={16} className="mr-1" /> Sebelumnya
+              <ChevronLeft size={16} className="mr-1" /> Previous
             </button>
             <button
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages || isLoading}
               className="btn btn-sm btn-outline-primary font-weight-bold d-flex align-items-center"
             >
-              Selanjutnya <ChevronRight size={16} className="ml-1" />
+              Next <ChevronRight size={16} className="ml-1" />
             </button>
           </div>
         </div>

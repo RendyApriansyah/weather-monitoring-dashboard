@@ -1,9 +1,9 @@
 /**
- * Utility Pemformatan Tanggal & Waktu untuk EMD Dashboard
+ * Date & Time Formatting Utilities for EMD Dashboard
  */
 
 /**
- * Format ISO string ke format lengkap: DD/MM/YYYY HH:mm
+ * Formats ISO string to full format: DD/MM/YYYY HH:mm
  */
 export const formatDateTime = (isoString) => {
   if (!isoString) return '--';
@@ -19,28 +19,28 @@ export const formatDateTime = (isoString) => {
 };
 
 /**
- * Format jam menit singkat untuk grafik interval harian (misal: 14:30)
+ * Formats short time for daily interval charts (e.g. 14:30)
  */
 export const formatTimeShort = (isoString) => {
   if (!isoString) return '';
   const d = new Date(isoString);
-  return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 };
 
 /**
- * Format tanggal singkat untuk grafik interval mingguan/bulanan (misal: 02 Sep)
+ * Formats short date for weekly/monthly interval charts (e.g. 02 Sep)
  */
 export const formatDateShort = (isoString) => {
   if (!isoString) return '';
   const d = new Date(isoString);
-  return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
 };
 
 /**
- * Mendapatkan teks jam sekarang dalam WIB (misal: 14:30 WIB)
+ * Gets the current time string in WIB (e.g. 14:30 WIB)
  */
 export const getCurrentTimeStringWIB = () => {
   const now = new Date();
-  return now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+  return now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }) + ' WIB';
 };
 

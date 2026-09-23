@@ -1,74 +1,74 @@
 # EMD - Environmental Monitoring Dashboard
 
-EMD (Environmental Monitoring Dashboard) adalah sebuah platform pemantauan cuaca dan lingkungan secara *real-time* untuk kawasan hiper-lokal (fokus area Palembang, Sumatera Selatan). 
+EMD (Environmental Monitoring Dashboard) is a real-time weather and environmental monitoring platform for hyper-local areas (focused on Palembang, South Sumatra).
 
-Sistem ini menampilkan dan menganalisis data metrik lingkungan yang dikirimkan langsung oleh perangkat sensor IoT (seperti sensor **BME280**, **DHT**, dan **BH1750**). Aplikasi web ini dirancang dengan prinsip *"The Command Center"* — menitikberatkan pada penyajian data sensor secara mentah, cepat, tanpa manipulasi, dan visualisasi tren historis yang jelas bagi peneliti, akademisi, hingga teknisi perangkat IoT.
+The system displays and analyzes environmental metric data transmitted directly from IoT sensor devices (such as **BME280**, **DHT**, and **BH1750** sensors). This web application is engineered around *"The Command Center"* principle — emphasizing fast, raw, unmanipulated sensor data presentation and clear historical trend visualizations for researchers, academics, and IoT hardware technicians.
 
 ---
 
-## 🌟 Fitur Utama
+## 🌟 Key Features
 
-- **Pemantauan Real-Time**: Integrasi *live* dengan Supabase WebSockets untuk mendengarkan *insert events* (data sensor baru) secara instan.
-- **Multistasiun Sensor**:
-  - **Stasiun 1**: Menampilkan data Suhu, Kelembapan, dan Tekanan Udara (BME280).
-  - **Stasiun 2**: Menampilkan data Suhu, Kelembapan, dan Intensitas Cahaya (DHT & BH1750).
-- **Analisis Tren Historis**: Visualisasi grafik interaktif menggunakan **Recharts** untuk mendiagnosis tren cuaca dalam rentang waktu tertentu.
-- **Responsif & Aksesibel**: Layout 3-kolom untuk Desktop yang luas, dan navigasi *Off-Canvas Sidebar* yang efisien untuk perangkat *Mobile*. Menggunakan desain antarmuka yang bersih dengan *Floating Header*.
-- **Sistem Desain Kokoh**: Dikelola dengan aturan token desain yang ketat (menggunakan *CSS Variables* terpusat) agar UI konsisten dan mendukung perombakan *theme* dengan mudah di masa depan.
+- **Real-Time Monitoring**: Live integration with Supabase WebSockets to listen for database insert events (new sensor readings) instantly.
+- **Multi-Sensor Stations**:
+  - **Station 1**: Displays Temperature, Humidity, and Atmospheric Pressure (BME280).
+  - **Station 2**: Displays Temperature, Humidity, and Light Intensity (DHT & BH1750).
+- **Historical Trend Analysis**: Interactive chart visualizations powered by **Recharts** to diagnose weather trends across selectable time windows.
+- **Responsive & Accessible**: Spacious 3-column layout for Desktop and efficient *Off-Canvas Sidebar* navigation for Mobile devices. Built with a clean *Floating Header* interface.
+- **Robust Design System**: Governed by strict design token rules (using centralized CSS Variables) ensuring consistent UI and effortless theme customization in the future.
 
 ## 🛠️ Tech Stack
 
 - **Frontend:** [React](https://reactjs.org/) + [Vite](https://vitejs.dev/)
 - **Backend / Database:** [Supabase](https://supabase.com/)
 - **Charts:** [Recharts](https://recharts.org/)
-- **Styling:** CSS Variables murni dengan utilitas khusus.
-- **Desain & Standar UI:** Dikelola menggunakan pedoman `DESIGN.md` & `PRODUCT.md`.
+- **Styling:** Pure CSS Variables with custom utilities.
+- **Design & UI Standards:** Managed using `DESIGN.md` & `PRODUCT.md` guidelines.
 
-## 🚀 Panduan Instalasi (Development)
+## 🚀 Installation & Development Guide
 
-### 1. Prasyarat
-- Node.js (versi 16+ disarankan)
-- NPM atau Yarn
-- Akun Supabase dan proyek database yang sudah dikonfigurasi.
+### 1. Prerequisites
+- Node.js (v16+ recommended)
+- NPM or Yarn
+- A configured Supabase account and database project.
 
-### 2. Kloning Repositori
+### 2. Clone the Repository
 ```bash
 git clone https://github.com/username/weather-monitoring-dashboard.git
 cd weather-monitoring-dashboard
 ```
 
-### 3. Instalasi Dependensi
+### 3. Install Dependencies
 ```bash
 npm install
 ```
 
-### 4. Konfigurasi Environment Variables
-Buat file `.env` di *root* proyek (atau `.env.local`) dan tambahkan kredensial Supabase Anda. 
+### 4. Configure Environment Variables
+Create a `.env` file in the project root (or `.env.local`) and configure your Supabase credentials:
 ```env
 VITE_SUPABASE_URL=https://<PROJECT_ID>.supabase.co
 VITE_SUPABASE_ANON_KEY=<YOUR_SUPABASE_ANON_KEY>
 ```
 
-### 5. Menjalankan Development Server
+### 5. Start the Development Server
 ```bash
 npm run dev
 ```
-Buka peramban dan akses `http://localhost:5173` (atau *port* yang diberikan oleh Vite) untuk melihat dashboard.
+Open your browser and navigate to `http://localhost:5173` (or the port specified by Vite) to view the dashboard.
 
-## 🗄️ Struktur Database (Supabase)
+## 🗄️ Database Structure (Supabase)
 
-Aplikasi ini bergantung pada dua tabel utama untuk beroperasi:
-1. `sensor_data` (Tabel untuk Stasiun 1 - BME280)
-2. `station_2_data` (Tabel untuk Stasiun 2 - DHT & BH1750)
+This application relies on two primary tables:
+1. `sensor_data` (Table for Station 1 - BME280)
+2. `station_2_data` (Table for Station 2 - DHT & BH1750)
 
-Keduanya diwajibkan memiliki kolom pembacaan data yang sesuai (*temperature*, *humidity*, *parameter3*) dan atribut *timestamp* untuk dipetakan ke dalam bagan.
+Both tables require appropriate sensor reading columns (`temperature`, `humidity`, `parameter3`) and a timestamp attribute (`created_at`) to be mapped into charts and tables.
 
-## 🎨 Pedoman Desain (Design System)
+## 🎨 Design System Guidelines
 
-Proyek ini menggunakan panduan desain terpusat. Apabila Anda ingin menambahkan fitur atau memodifikasi komponen UI, harap merujuk ke:
-- `DESIGN.md`: Untuk aturan aksesibilitas, palet warna, tipografi, kelengkungan *border-radius*, dan tata letak UI.
-- `PRODUCT.md`: Untuk memahami visi produk dan prinsip-prinsip pengembangan (*"The Command Center"*).
+This project follows centralized design documentation. When adding features or modifying UI components, please refer to:
+- `DESIGN.md`: For accessibility rules, color palettes, typography, border-radius scales, and layout specifications.
+- `PRODUCT.md`: To understand the product vision and core principles (*"The Command Center"*).
 
-## 📄 Lisensi
+## 📄 License
 
-Hak Cipta &copy; EMD - Environmental Monitoring Dashboard. Palembang, Sumatera Selatan.
+Copyright &copy; 2026 EMD - Environmental Monitoring Dashboard. Palembang, South Sumatra. All rights reserved.

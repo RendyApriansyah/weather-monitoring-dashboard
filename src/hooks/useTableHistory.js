@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabaseClient';
 export const DEFAULT_ROWS_PER_PAGE = 25;
 
 /**
- * Custom Hook untuk memuat data tabel riwayat terpaginasi
+ * Custom Hook to load paginated history table data
  */
 export function useTableHistory(stationConfig, currentPage = 1, pageSize = DEFAULT_ROWS_PER_PAGE) {
   const [tableData, setTableData] = useState([]);
@@ -20,7 +20,7 @@ export function useTableHistory(stationConfig, currentPage = 1, pageSize = DEFAU
       const from = (currentPage - 1) * pageSize;
       const to = from + pageSize - 1;
 
-      // Hitung total baris
+      // Calculate total rows
       const { count, error: countError } = await supabase
         .from(tableName)
         .select('*', { count: 'exact', head: true });
@@ -32,7 +32,7 @@ export function useTableHistory(stationConfig, currentPage = 1, pageSize = DEFAU
         setTotalPages(Math.max(1, Math.ceil(count / pageSize)));
       }
 
-      // Ambil baris sesuai range
+      // Fetch rows within range
       const { data, error: dataError } = await supabase
         .from(tableName)
         .select('*')
@@ -45,7 +45,7 @@ export function useTableHistory(stationConfig, currentPage = 1, pageSize = DEFAU
         setTableData(data);
       }
     } catch (err) {
-      console.error(`[useTableHistory] Gagal memuat data tabel ${stationConfig.tableName}:`, err);
+      console.error(`[useTableHistory] Failed to load table data for ${stationConfig.tableName}:`, err);
       setError(err);
     } finally {
       setIsLoading(false);
@@ -55,7 +55,7 @@ export function useTableHistory(stationConfig, currentPage = 1, pageSize = DEFAU
   useEffect(() => {
     let isCancelled = false;
 
-    // Masuk ke microtask agar tidak memicu peringatan render bertingkat React 19
+    // Enter microtask to prevent cascading render warnings in React 19
     Promise.resolve().then(() => {
       if (!isCancelled) {
         setIsLoading(true);
